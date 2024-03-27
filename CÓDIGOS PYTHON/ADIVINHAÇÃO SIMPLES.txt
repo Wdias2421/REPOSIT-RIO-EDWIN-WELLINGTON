@@ -1,0 +1,26 @@
+print("<===============================>")
+print("+++++++ONINONINONINONINONI+++++++")
+print("+++++++++++++++++++++++++++++++++")
+
+NUN = 472
+total = 5
+
+while(total > 0):
+    laal_str = input("digite seu número: ")
+    print("você digitou " ,laal_str)
+    laal = int(laal_str)
+    
+    certou = laal == NUN
+    maior  = laal > NUN
+    menor  = laal < NUN
+
+    if(certou):
+        print("+++++certou mizeravi+++++")
+    else:
+        if(maior):
+            print("Foi maior!")
+        elif(menor):
+            print("Foi menor! muleque do djanho")
+            
+    total = total -1
+print("fim de jogo)
