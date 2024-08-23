@@ -1,0 +1,254 @@
+import time
+import os
+import unicodedata
+
+
+
+
+def limpar():
+  os.system('cls' if os.name == 'nt' else 'clear')
+
+
+
+
+def home():
+  limpar()
+  print("************************************")
+  print("OLÁ, SEJA BEM-VINDO AO NOSSO MERCADO")
+  print("************************************")
+  print("                                    ")
+  print("                                    ")
+  print("ESCOLHA UMA DAS OPÇÕES ABAIXO:")
+  print("                              ")
+  laal = input("1:ADICIONAR CONTA.\n2:EXCLUIR CONTA.\n3:COMPRAR. \n")
+  if laal == "1":
+      op1()
+  elif laal == "2":
+      op2()
+  elif laal == "3":
+      op3()
+  elif laal == "1987":
+      op4()
+  else:
+      home()
+    
+def op1():
+   limpar()
+   with open('contas.txt', 'r') as arq:
+       linhas = arq.readlines()
+  
+   print("************************************")
+   print("VAMOS CRIAR UMA CONTA\n")
+   nome = input("DIGITE SEU NOME:\n")
+   while True:
+       try:
+           idade = int(input("DIGITE SUA IDADE:\n"))
+           cpf = int(input("DIGITE SEU CPF(Somente  Números):\n"))
+           break
+       except ValueError:
+           print("Erro de Digitação(Somente Números)")
+  
+   for linha in linhas:
+       nome_existe, idade_existe, cpf_existe = linha.strip().split(', ')
+       if cpf_existe == str(cpf):
+           print("CONTA JÁ EXISTE")
+           time.sleep(2)
+           home()
+           return
+  
+   with open('contas.txt', 'a') as arq:
+       arq.write('{}, {}, {}\n'.format(nome, idade, cpf))
+  
+   con = input("CONFIRMAR? (s/n)\n")
+   if con == "n":
+       print("REGISTRO CANCELADO")
+       home()
+   elif con == "s":
+       print("CONTA CRIADA COM SUCESSO")
+       print("**********************************")
+       arq.close()
+       compras()
+   else:
+       print("NÃO ENTENDI, TENTE NOVAMENTE")
+       time.sleep(0.5)
+       home()
+def compras():
+  conf = input("GOSTARIA DE COMEÇAR A COMPRAR?\n 1: SIM   2: NÃO\n")
+  if conf == "1":
+      print("ÓTIMO, VAMOS COMEÇAR")
+      time.sleep(0.5)
+      mercado.comprar()
+  else:
+      home()
+def op3():
+      mercado.comprar()
+def op2():
+   limpar()
+   print("*******EXCLUIR CONTA*******")
+   if not os.path.exists('contas.txt'):
+       print("ARQUIVO DE CONTAS NÃO ENCONTRADO")
+       time.sleep(0.5)
+       home()
+  
+   if os.path.getsize('contas.txt') == 0:
+       print("NÃO HÁ CONTAS PARA EXCLUIR")
+       time.sleep(0.5)
+       home()
+  
+   with open('contas.txt', 'r') as arq:
+       linhas = arq.readlines()
+  
+   cpf_excluir = input("DIGITE O CPF DA CONTA QUE DESEJA EXCLUIR:\n")
+  
+   encontrada = False
+   for i, linha in enumerate(linhas):
+       nome, idade, cpf = linha.strip().split(', ')
+       if cpf == cpf_excluir:
+           del linhas[i]
+           print("CONTA EXCLUÍDA COM SUCESSO!")
+           encontrada = True
+           time.sleep(1)
+           break
+  
+   if not encontrada:
+       print("CONTA NÃO ENCONTRADA")
+       time.sleep(0.5)
+  
+   with open('contas.txt', 'w') as arq:
+       arq.writelines(linhas)
+  
+   home()
+
+
+
+
+class Supermercado:
+  def __init__(self):
+      self.catalogo = {'arroz': 5.29, 'feijao': 5.89, 'macarrao': 3.0, 'carne': 25.0, 'bolacha': 5.0}
+      self.carrinho = {}
+      self.total = 0.0
+    
+  def comprar(self):
+      while True:
+          print('CATÁLOGO:')
+          for produto, preco in self.catalogo.items():
+              print(f'{produto.capitalize()} - R${preco:.2f}')
+           
+          escolha = input('Digite o que deseja comprar (ou "sair" para encerrar):\n')
+          if escolha == 'sair':
+              break
+       
+          if escolha in self.catalogo:
+              quantidade = int(input('Digite a quantidade desejada: '))
+              if escolha in self.carrinho:
+                  self.carrinho[escolha] += quantidade
+              else:
+                  self.carrinho[escolha] = quantidade
+              print(f'{quantidade} unidades de {escolha.capitalize()} adicionadas ao carrinho. ')
+          else:
+              print('PRODUTO NÃO ENCONTRADO. TENTE NOVAMENTE')
+           
+      print('\nResumo da compra')
+      for produto, quantidade in self.carrinho.items():
+          preco_unitario = self.catalogo[produto]
+          preco_total = preco_unitario * quantidade
+          print(f'{quantidade} unidades de {produto.capitalize()} - R${preco_total:.2f}')
+          self.total += preco_total
+       
+      print(f'Total da compra: R${self.total:.2f}')
+      self.pagar()
+   
+  def pagar(self):
+      pagamento = input('Digite o valor recebido pelo cliente (ou "cancelar" para cancelar a compra)\n')
+      if pagamento.lower() == 'cancelar':
+          print('COMPRA CANCELADA.')
+          return
+   
+      valor_pago = float(pagamento)
+      troco = valor_pago - self.total
+   
+      if troco < 0:
+          print(f'Valor insuficiente. Faltam R${-troco:.2f}.')
+          self.pagar()
+      else:
+          if troco > 0:
+              print(f'Troco: R${troco:.2f}')
+           
+          cpf_nota = input('deseja informar o CPF na nota fiscal? (sim/não): ')
+          if cpf_nota.lower() == 'sim':
+             cpf = input('Digite o CPF: ')
+             print(f'Nota fiscal: Total da compra - R${self.total:.2f} | CPF - {cpf}')
+             print("****************************************************************")
+             print("OBRIGADO PELA SUA COMPRA")
+             time.sleep(3)
+             home()
+          else:
+             print(f'Nota fiscal: Total da compra - R${self.total:.2f}')
+             print("**************************************************")
+             print("OBRIGADO PELA SUA COMPRA")
+             time.sleep(3)
+             home()
+           
+def op4():
+  print(  'PROCESSANDO', end="")
+  for _ in range(3):
+      print('.', end='', flush=True)
+      time.sleep(0.7)
+  print('  COMPLETO.\n')
+  time.sleep(0.5)
+  limpar()
+  while True:
+      print('———[BEM-VINDO AO MODO DESENVOLVEDOR]———\n')
+      print('O QUE DESEJA FAZER?\n ')
+      mods = input("1: MODIFICAR MERCADO.\n2: ALTERAR PREÇO.\n")
+      if mods == "1":
+          limpar()
+          while True:
+              print("MERCADO:\n")
+              print("1: ADICIONAR PRODUTO")
+              print("2: REMOVER PRODUTO")
+              print("3: VOLTAR AO MENU INICIAL")
+              opcao = input("ESCOLHA UMA OPÇÃO:\n")
+              if opcao == "1":
+                  prod = input("DIGITE O NOME DO PRODUTO:\n")
+                  prec = float(input(f"Digite o preço para {prod.capitalize()}: "))
+                  mercado.catalogo[prod] = prec
+                  print(f"Produto {prod.capitalize()} adicionado ao mercado com preço R${prec:.2f}")
+              elif opcao == "2":
+                  print("PRODUTOS:\n")
+                  for p, s in mercado.catalogo.items():
+                      print(f"{p.capitalize()}: R${s:.2f}")
+                  prod = input("\nDIGITE O NOME DO PRODUTO PARA REMOVER:\n")
+                  if prod in mercado.catalogo:
+                      del mercado.catalogo[prod]
+                      print(f"Produto {prod.capitalize()} removido do mercado")
+                  else:
+                      print("Produto não encontrado.")
+              elif opcao == "3":
+                  home()
+                  break
+              else:
+                  print("OPÇÃO INVÁLIDA. TENTE NOVAMENTE")
+      if mods == "2":
+          limpar()
+          while True:
+              print("PRODUTOS:\n")
+              for p, s in mercado.catalogo.items():
+                  print(f"{p.capitalize()}: R${s:.2f}")
+              prod = input("\nDIGITE O NOME DO PRODUTO:\n")
+              prods = unicodedata.normalize('NFKD', prod).encode('ascii', 'ignore').decode('utf-8')
+              if prods in mercado.catalogo:
+                  prec = float(input(f"Digite o novo preço para {prod.capitalize()}: "))
+                  mercado.catalogo[prods] = prec
+                  print(f"Preço de {prods.capitalize()} alterado para R${prec:.2f}")
+                  home()
+                  break
+              else:
+                  print("Produto não encontrado.")
+      else:
+          print("inválido")
+mercado = Supermercado()
+home()
+
+
+
