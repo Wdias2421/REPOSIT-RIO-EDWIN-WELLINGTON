@@ -1,0 +1,379 @@
+let con = {};
+function home() {
+ while(true){
+   console.log('BEM VINDO(A) AO MERCADO DO SEU ORESTES')
+   const lala = prompt("\nCOMO PODEMOS AJUDAR?\n 1:GOSTARIA DE CRIAR UMA CONTA.\n 2:GOSTARIA DE REMOVER UMA CONTA.\n 3:GOSTARIA DE COMEÇAR A COMPRAR.\n")
+   if (lala == 1){
+       op1()
+   } else if (a == 2) {
+       op2()
+   } else if (a ==3) {
+       op3()
+   }
+ }
+}
+function sc(){
+   console.log("CONTAS:");
+   Object.entries(con).forEach(([chave, valor]) => {
+   console.log(`  ${chave};`);
+   });
+}
+function op1() {
+  while (true){
+   console.log("VOCÊ SELECIONOU: CRIAR CONTA\nPOR FAVOR DIGITE SUAS INFORMAÇÕES: (S PARA SAIR)\n")
+   const nome = prompt("INSIRA O NOME DA CONTA:\n")
+   if (nome.toUpperCase() == 'S') {
+       break
+   } else if(nome.trim() === ''){
+       console.log("(nenhuma entrada)\n")
+       continue;
+   } else if (nome.length < 4){
+       console.log("(desculpe, mas a senha precisa ter pelo menos 4 dígitos)\n");
+       continue
+   } else if (con[nome]){
+       console.log("(essa conta já existe, por favor tente outra vez)");
+       continue
+   }
+   const senha = prompt("CRIE UMA SENHA:\n")
+   if (senha.toUpperCase() == "S") {
+       break;
+   }
+   const c = prompt("CONFIRMAR? (S/N)\n")
+   if (c.toUpperCase() == 'S'){
+       con[nome] = senha
+       console.log("CONTA CRIADA COM SUCESSO")
+       break
+  } else if (c.toUpperCase() == 'N'){
+      break;
+  } else {
+      continue;
+  }
+  }
+}
+function op2(){
+   sc()
+   const excluir = prompt("DIGITE O NOME DA CONTA QUE GOSTARIA DE EXCLUIR\n")
+   const valor = prompt("Digite a senha para confirmar:");
+   if (con[excluir] === valor) {
+       delete con[excluir];
+       console.log(`CONTA( ${excluir} ) EXCLUÍDA`);
+   } else {
+       console.log("Senha incorreta ou conta não existe.");
+   }
+}
+function op3() {
+  let carrinho = {};
+   while (true) {
+    console.log("BEM VINDO AO MERCADO:\nGOSTARIA DE USAR SUA CONTA?\n (1:Sim/2:Não)\n")
+    const re = prompt()
+    if (re == 1){
+        console.log("vamos lá")
+        if (Object.keys(con).length === 0) {
+        console.log("OPA! PARECE QUE NÃO HÁ CONTAS AINDA");
+        console.log("\nGOSTARIA DE CRIAR UMA? (1:S/2:N):")
+        const conta = prompt()
+        if (conta.toUpperCase() == 1){
+            op1()
+        } else if (conta == 2){
+            break;
+        } else {
+            console.log("(resposta inválida)")
+            continue;
+        }
+       }
+        const nome = prompt("Digite o nome da conta:")
+        if (con[nome]){
+        } else {
+            console.log("(Esta conta não existe, tente novamente)")
+            continue;
+        }
+        const senha = prompt("Digite sua senha:")
+        if (con[nome] === senha){
+            console.log("LOGIN REALIZADO");
+            break;
+        } else {
+            console.log("(senha incorreta)");
+            continue;
+        }
+    } else if (re == 2){
+        console.log("vamos direto às compras");
+        break;
+    } else {
+        console.log("(resposta inválida)")
+        continue;
+    }
+   }
+   console.log(carrinho)
+   let produtos = {
+       Macarrão: 3.65,
+       Ovos: 4.00,
+       Leite: 5.69,
+       Papel: 5.45,
+       Arroz: 11.00,
+       Bombril: 4,
+   };
+   while (true) {
+       let total = 0;
+       Object.keys(carrinho).forEach(produto => {
+               total += Number(carrinho[produto]);
+       });
+       console.log("Produtos:");
+       Object.entries(produtos).forEach(([produto, preco], index) => {
+           console.log(`  ${index + 1}. ${produto}: R$ ${preco.toFixed(2)}`);
+   });
+       const a = prompt("Digite o numero do produto para adicionar ao carrinho ('E' para remover, 'S' para finalizar):\n")
+       const produtoIndex = parseInt(a) - 1;
+       if (produtoIndex >= 0 && produtoIndex < Object.keys(produtos).length) {
+       } else if (a.toUpperCase() === 'S') {
+           console.log("Compra total");
+           console.log(carrinho)
+           console.log(total.toFixed(2))
+           break;
+       } else if (a.toUpperCase() === 'E') {
+           const produtoIndex = prompt("Digite o numero do produto para remover:\n")
+           const produto = Object.keys(produtos)[produtoIndex - 1];
+           if (carrinho[produto]) {
+               delete carrinho[produto];
+               console.log(`Produto removido do carrinho: ${produto}`);
+               continue;
+           } else {
+               console.log(`Produto não encontrado no carrinho: ${produto}`);
+               continue;
+           }
+       } else {
+           console.log(`Número de produto inválido: ${a}`);
+           continue;
+       }
+       const b = prompt("Digite a quantidade (S para Sair):\n")
+       const quantidade = parseInt(b);
+       if (b.toUpperCase() == "S"){
+           console.log("Compra total");
+           console.log(carrinho)
+           console.log(total.toFixed(2))
+           break;
+       } else if (isNaN(parseInt(b)) || parseInt(b) <= 0) {
+           console.log("Quantidade inválida.");
+           continue;
+       } else {
+           const produto = Object.keys(produtos)[produtoIndex];
+           const precoTotal = produtos[produto] * quantidade;
+           carrinho[produto] = precoTotal.toFixed(2);
+           const produt = produtos[produto];
+           console.log(`Produto adicionado ao carrinho: ${produto} - R$ ${produt.toFixed(2)} x${b}`);
+           console.log(carrinho);
+           continue;
+       }
+   }
+   while (true){
+       let total = 0;
+       Object.keys(carrinho).forEach(produto => {
+               total += Number(carrinho[produto]);
+       });
+       if (total == 0){
+           break
+       }
+       console.log("Como gostaria de pagar?");
+       const res = prompt("  Formas de pagamento:\n1:Dinheiro.\n2:Crédito.\n3:Débito.\n4:Fiado.\n5:Xerecard.\n6:Rabo.\n7:Escambo.\n8:Calote.\n9:Assalto.\n10:Deus lhe pague.\n")
+       if (res == 10){
+           console.log("AMÉM IRMÃO, Deus lhe acompanhe 🙏")
+           break;
+       } else if (res == 9){
+           console.log("*VOCÊ APRESENTOU SEU CUPOM DE 100% DE DESCONTO AO CAIXA, PORÉM NÃO PODERÁ COMPRAR NO MESMO ESTABELECIMENTO NOVAMENTE E SERÁ PERSEGUIDO PELA POLÍCIA")
+           break;
+       } else if (res == 8){
+           console.log("VOLTA AQUI SEU FILHO DA PUTAAAAAAAA")
+           break;
+       } else if (res == 7){
+           console.log("Qual item você gostaria de oferecer como pagamento?")
+           const la = prompt()
+           console.log("OBRIGADO(A), VOLTE SEMPRE!")
+           break;
+       } else if (res == 6){
+           console.log("( ͡° ͜ʖ ͡°) ")
+           const s = prompt("Quer aqui ou marcar para outro dia?(1/2)\n")
+           if (s == 1){
+               console.log("Abaixa as calça então")
+               console.log("(UMA HORA DEPOIS)\nObrigado, volte sempre!😃")
+               break
+           } else if (s == 2) {
+             console.log("Agendamento de pagamento com Rabo:")
+             const dia = prompt("Digite o dia: ")
+             const diaInt = parseInt(dia)
+             if (isNaN(diaInt)) {
+               console.log("Dia inválido. Tente novamente.")
+               continue;
+             }
+             if (diaInt < 1 || diaInt > 31) {
+               console.log("Dia inválido. Tente novamente.")
+               continue;
+             }
+             const hora = prompt("Digite a hora (HH:MM): ")
+             const partesHora = hora.split(':')
+             if (partesHora.length !== 2) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             const horaInt = parseInt(partesHora[0])
+             const minutoInt = parseInt(partesHora[1])
+             if (isNaN(horaInt) || isNaN(minutoInt)) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             if (horaInt < 0 || horaInt > 23) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             if (minutoInt < 0 || minutoInt > 59) {
+               console.log("Minuto inválido. Tente novamente.")
+               continue;
+             }
+             const local = prompt("Digite o local de pagamento: ")
+             if (local.trim() === '') {
+               console.log("Local inválido. Tente novamente.")
+               continue;
+             }
+             console.log(`Agendamento realizado com sucesso! Dia: ${dia}, Hora: ${hora}, Local: ${local}`)
+             break;
+           }
+       } else if(res == 5){
+           console.log("( ͡° ͜ʖ ͡°) ")
+           const s = prompt("Quer aqui ou marcar para outro dia?(1/2)\n")
+           if (s == 1){
+               console.log("Abaixa as calça então")
+               console.log("(UMA HORA DEPOIS)\nObrigado, volte sempre!😃")
+               break
+           } else if (s == 2) {
+             console.log("Agendamento de pagamento com Xerecard:")
+             const dia = prompt("Digite o dia: ")
+             const diaInt = parseInt(dia)
+             if (isNaN(diaInt)) {
+               console.log("Dia inválido. Tente novamente.")
+               continue;
+             }
+             if (diaInt < 1 || diaInt > 31) {
+               console.log("Dia inválido. Tente novamente.")
+               continue;
+             }
+             const hora = prompt("Digite a hora (HH:MM): ")
+             const partesHora = hora.split(':')
+             if (partesHora.length !== 2) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             const horaInt = parseInt(partesHora[0])
+             const minutoInt = parseInt(partesHora[1])
+             if (isNaN(horaInt) || isNaN(minutoInt)) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             if (horaInt < 0 || horaInt > 23) {
+               console.log("Hora inválida. Tente novamente.")
+               continue;
+             }
+             if (minutoInt < 0 || minutoInt > 59) {
+               console.log("Minuto inválido. Tente novamente.")
+               continue;
+             }
+             const local = prompt("Digite o local de pagamento: ")
+             if (local.trim() === '') {
+               console.log("Local inválido. Tente novamente.")
+               continue;
+             }
+             console.log(`Agendamento realizado com sucesso! Dia: ${dia}, Hora: ${hora}, Local: ${local}`)
+             break;
+           }
+       } else if(res == 4){
+           console.log("Pague o que me deve, caloteiro🕵️")
+           break;
+       } else if (res == 3){
+           if (Object.keys(con).length === 0) {
+               console.log("OPA! PARECE QUE NÃO HÁ CONTAS AINDA");
+               console.log("\nGOSTARIA DE CRIAR UMA? (1:S/2:N):")
+               const conta = prompt()
+               if (conta.toUpperCase() == 1){
+                   op1()
+               } else if (conta == 2){
+                     continue;
+               } else {
+                   console.log("(resposta inválida)")
+                   continue;
+               }
+           }
+           console.log("Pagamento com débito:")
+           const conta = prompt("Digite o nome da conta:")
+           if (con[conta]){
+             console.log("Conta encontrada!")
+             const senha = prompt("Digite a senha:")
+             if (con[conta] === senha){
+               console.log("Pagamento realizado com sucesso!")
+               break;
+             } else {
+               console.log("Senha incorreta. Tente novamente.")
+               continue;
+             }
+           } else {
+             console.log("Conta não encontrada. Tente novamente.")
+             continue;
+           }
+         } else if (res == 2){
+             if (Object.keys(con).length === 0) {
+                 console.log("OPA! PARECE QUE NÃO HÁ CONTAS AINDA");
+                 console.log("\nGOSTARIA DE CRIAR UMA? (1:S/2:N):")
+                 const conta = prompt()
+                 if (conta.toUpperCase() == 1){
+                     op1()
+                 } else if (conta == 2){
+                     continue;
+                 } else {
+                     console.log("(resposta inválida)")
+                     continue;
+                 }
+             }
+             console.log("Pagamento com crédito:")
+             const conta = prompt("Digite o nome da conta:")
+             if (con[conta]){
+               console.log("Conta encontrada!")
+               const senha = prompt("Digite a senha:")
+               if (con[conta] === senha){
+                 console.log("Você gostaria de parcelar o pagamento?")
+                 const parcelas = prompt("Digite o número de parcelas (ou 'S' para não parcelar):")
+                 if (parcelas.toUpperCase() === 'S'){
+                   console.log("Pagamento realizado com sucesso!")
+                   break;
+                 } else {
+                   const parcelaInt = parseInt(parcelas)
+                   if (parcelaInt > 0){
+                     console.log(`Pagamento parcelado em ${parcelas} vezes!`)
+                     break;
+                   } else {
+                     console.log("Número de parcelas inválido. Tente novamente.")
+                     continue;
+                 }
+               }
+             } else {
+               console.log("Senha incorreta. Tente novamente.")
+               continue;
+             }
+           } else {
+             console.log("Conta não encontrada. Tente novamente.")
+             continue;
+           }
+         } else if (res == 1){
+           console.log("Pagamento com dinheiro:")
+           const valor = prompt("Digite o valor a ser pago:")
+          
+           if (valor >= total){
+             const troco = valor - total;
+             console.log(`Pagamento realizado com sucesso! Troco: R$ ${troco.toFixed(2)}`)
+             break;
+           } else {
+             console.log("Valor insuficiente. Tente novamente.")
+             continue;
+           }
+         } else {
+             console.log("invalido")
+             continue;
+         }
+   }
+}
+home()
